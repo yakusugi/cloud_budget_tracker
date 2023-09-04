@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="stats"
+        android:id="@+id/stats"
+        android:icon="@drawable/stats"
+        />
+    <item
+        android:title="search"
+        android:id="@+id/search"
+        android:icon="@drawable/search"
+        />
+    <item
+        android:title="exchange"
+        android:id="@+id/exchange"
+        android:icon="@drawable/exchange"
+        />
+</menu>
