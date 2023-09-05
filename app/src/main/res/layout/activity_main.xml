@@ -17,7 +17,7 @@
 
     </FrameLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/bank_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
         android:contentDescription="Add transaction"
         />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/income_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
         android:visibility="invisible"
         tools:ignore="MissingConstraints" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/spending_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
         app:srcCompat="@drawable/spending"
         tools:ignore="MissingConstraints" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/floating_action_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -74,6 +74,20 @@
         android:visibility="visible"
         app:srcCompat="@drawable/add"
         tools:ignore="MissingConstraints" />
+
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/floating_action_btn"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="16dp"-->
+<!--        android:clickable="true"-->
+<!--        android:contextClickable="true"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/bottom_nav_view"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:visibility="visible"-->
+<!--        app:srcCompat="@drawable/add"-->
+<!--        tools:ignore="MissingConstraints" />-->
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav_view"

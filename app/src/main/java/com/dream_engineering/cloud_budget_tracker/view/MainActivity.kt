@@ -19,6 +19,8 @@ class MainActivity : AppCompatActivity() {
     private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.to_bottom_anim) }
 
     private lateinit var binding: ActivityMainBinding
+//    val binding = ActivityMainBinding.inflate(layoutInflater)
+
 
     private var clicked = false
     private lateinit var addBtn: FloatingActionButton
@@ -45,10 +47,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        addBtn= findViewById(R.id.floating_action_btn)
-        spendingAddBtn = findViewById(R.id.spending_btn)
-        incomeAddBtn = findViewById(R.id.income_btn)
-        bankAddBtn = findViewById(R.id.bank_btn)
+        setContentView(binding.getRoot());
+
+        addBtn = binding.floatingActionBtn
+        spendingAddBtn = binding.spendingBtn
+        incomeAddBtn = binding.incomeBtn
+        bankAddBtn = binding.bankBtn
 
         setContentView(binding.root)
         replaceFragments(StatsFragment())
