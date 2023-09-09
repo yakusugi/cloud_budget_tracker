@@ -7,6 +7,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.dream_engineering.cloud_budget_tracker.R
 import com.dream_engineering.cloud_budget_tracker.databinding.ActivityMainBinding
 import com.getbase.floatingactionbutton.FloatingActionButton
@@ -63,6 +64,19 @@ class MainActivity : AppCompatActivity() {
 
         spendingAddBtn.setOnClickListener() {
             Toast.makeText(this, "spending btn clicked", Toast.LENGTH_SHORT).show()
+            val fragment = AddSpendingFragment() // Replace with your fragment class
+
+            // Begin a fragment transaction
+            val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+
+            // Replace the fragment_container with your fragment
+            transaction.replace(R.id.frame_layout, fragment)
+
+            // Add the transaction to the back stack (optional, for back navigation)
+            transaction.addToBackStack(null)
+
+            // Commit the transaction
+            transaction.commit()
         }
 
         incomeAddBtn.setOnClickListener() {
