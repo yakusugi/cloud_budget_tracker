@@ -9,8 +9,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.dream_engineering.cloud_budget_tracker.dao.UserRegistrationDao
 import com.dream_engineering.cloud_budget_tracker.dto.UserDto
+import com.dream_engineering.cloud_budget_tracker.utils.SharedPreferencesManager
 import java.io.IOException
 
 class LoginActivity : AppCompatActivity() {
@@ -44,6 +46,11 @@ class LoginActivity : AppCompatActivity() {
                         editor.apply()
 
                         Toast.makeText(this@LoginActivity, "Login successful!", Toast.LENGTH_SHORT).show()
+
+                        //preserve user email info
+                        val userEmail = userDto.email
+                        SharedPreferencesManager.saveUserEmail(this, userEmail)
+
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                     } else {

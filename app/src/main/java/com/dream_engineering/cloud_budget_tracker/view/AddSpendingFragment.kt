@@ -1,16 +1,23 @@
 package com.dream_engineering.cloud_budget_tracker.view
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import com.dream_engineering.cloud_budget_tracker.R
+import com.dream_engineering.cloud_budget_tracker.dao.SpendingDao
+import com.dream_engineering.cloud_budget_tracker.dto.SpendingDto
+import com.dream_engineering.cloud_budget_tracker.dto.UserDto
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
@@ -28,12 +35,13 @@ class AddSpendingFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var tvDatePicker: TextView
-    private lateinit var storeName: EditText
-    private lateinit var productName: EditText
-    private lateinit var productType: EditText
-    private lateinit var vatRate: EditText
-    private lateinit var price: EditText
-    private lateinit var note: EditText
+    private lateinit var storeNameText: EditText
+    private lateinit var productNameText: EditText
+    private lateinit var productTypeText: EditText
+    private lateinit var vatRateText: EditText
+    private lateinit var priceText: EditText
+    private lateinit var noteText: EditText
+    private lateinit var addSpendingButton: Button
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +52,7 @@ class AddSpendingFragment : Fragment() {
         }
     }
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -76,14 +85,34 @@ class AddSpendingFragment : Fragment() {
             datePicker.show()
         }
 
-        storeName = rootView.findViewById(R.id.add_spending_store_name)
-        productName = rootView.findViewById(R.id.add_spending_product_name)
-        productType = rootView.findViewById(R.id.add_spending_product_type)
-        vatRate = rootView.findViewById(R.id.add_spending_vate_rate)
-        price = rootView.findViewById(R.id.add_spending_price)
-        note = rootView.findViewById(R.id.add_spending_note)
+        storeNameText = rootView.findViewById(R.id.add_spending_store_name)
+        productNameText = rootView.findViewById(R.id.add_spending_product_name)
+        productTypeText = rootView.findViewById(R.id.add_spending_product_type)
+        vatRateText = rootView.findViewById(R.id.add_spending_vate_rate)
+        priceText = rootView.findViewById(R.id.add_spending_price)
+        noteText = rootView.findViewById(R.id.add_spending_note)
+        addSpendingButton = rootView.findViewById(R.id.spending_add_btn)
 
+        addSpendingButton.setOnClickListener {
+            val selectedDateInMillis = myCalendar.timeInMillis // Get the selected date in milliseconds
+            val date = Date(selectedDateInMillis) // Create a Date object from the milliseconds
+            val storeName: String = storeNameText.getText().toString()
+            val productName: String = productNameText.getText().toString()
+            val productType: String = productTypeText.getText().toString()
+            val vatRate: Double = vatRateText.getText().toString().toDouble()
+            val price: Double = priceText.getText().toString().toDouble()
+            val note: String = noteText.getText().toString()
 
+            try {
+                val spendingDto = SpendingDto(date, storeName, productName, productType, vatRate, price, note)
+
+                val spendingDao = SpendingDao(requireContext())
+                spendingDao.insertIntoSpending(spendingDto)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+
+        }
 
         return rootView
 //        return inflater.inflate(R.layout.fragment_add_spending, container, false)
