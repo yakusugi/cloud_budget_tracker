@@ -66,7 +66,7 @@ class SpendingDao(context: Context)  {
                 @Throws(AuthFailureError::class)
                 override fun getParams(): Map<String, String> {
                     val params = HashMap<String, String>()
-                    params["user_name"] = SharedPreferencesManager.getUserEmail(context).toString()
+                    params["email"] = SharedPreferencesManager.getUserEmail(context).toString()
                     params["date"] = spendingDto.date.toString()
                     params["store_name"] = spendingDto.storeName
                     params["product_name"] = spendingDto.productName
