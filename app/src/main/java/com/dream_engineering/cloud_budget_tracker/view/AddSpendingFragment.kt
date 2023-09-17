@@ -3,6 +3,7 @@ package com.dream_engineering.cloud_budget_tracker.view
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +11,17 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import com.dream_engineering.cloud_budget_tracker.R
 import com.dream_engineering.cloud_budget_tracker.dao.SpendingDao
 import com.dream_engineering.cloud_budget_tracker.dto.SpendingDto
 import com.dream_engineering.cloud_budget_tracker.dto.UserDto
+import com.dream_engineering.cloud_budget_tracker.utils.SharedPreferencesManager
 import java.io.IOException
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -42,6 +48,7 @@ class AddSpendingFragment : Fragment() {
     private lateinit var priceText: EditText
     private lateinit var noteText: EditText
     private lateinit var addSpendingButton: Button
+    val date: LocalDate = LocalDate.now()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,19 +78,24 @@ class AddSpendingFragment : Fragment() {
             val datePicker = DatePickerDialog(
                 requireContext(),
                 DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-                    myCalendar.set(Calendar.YEAR, year)
-                    myCalendar.set(Calendar.MONTH, month)
-                    myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                    // Use the 'date' variable here if needed
+                    val selectedDate = LocalDate.of(
+                        year,
+                        month + 1,
+                        dayOfMonth
+                    ) // +1 because months are 0-based in DatePickerDialog
+                    // Now you can use 'selectedDate' as the selected date
                     updateLabel(myCalendar)
                 },
-                myCalendar.get(Calendar.YEAR),
-                myCalendar.get(Calendar.MONTH),
-                myCalendar.get(Calendar.DAY_OF_MONTH)
-            )
+                date.year, // Use the year from 'date'
+                date.monthValue - 1, // Subtract 1 because months are 0-based in DatePickerDialog
+                date.dayOfMonth // Use the day of the month from 'date'
 
+            )
             // Show the date picker dialog
             datePicker.show()
         }
+
 
         storeNameText = rootView.findViewById(R.id.add_spending_store_name)
         productNameText = rootView.findViewById(R.id.add_spending_product_name)
@@ -93,9 +105,16 @@ class AddSpendingFragment : Fragment() {
         noteText = rootView.findViewById(R.id.add_spending_note)
         addSpendingButton = rootView.findViewById(R.id.spending_add_btn)
 
+        val outputDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+
         addSpendingButton.setOnClickListener {
-            val selectedDateInMillis = myCalendar.timeInMillis // Get the selected date in milliseconds
-            val date = Date(selectedDateInMillis) // Create a Date object from the milliseconds
+            Log.d("MyTag", "The content of myVariable is: ${date}")
+
+            val selectedDateInMillis =
+                myCalendar.timeInMillis // Get the selected date in milliseconds
+
+//            val dateForInsert = convertLocalDateToDate(date)
+
             val storeName: String = storeNameText.getText().toString()
             val productName: String = productNameText.getText().toString()
             val productType: String = productTypeText.getText().toString()
@@ -103,8 +122,10 @@ class AddSpendingFragment : Fragment() {
             val price: Double = priceText.getText().toString().toDouble()
             val note: String = noteText.getText().toString()
 
+
             try {
-                val spendingDto = SpendingDto(date, storeName, productName, productType, vatRate, price, note)
+                val spendingDto =
+                    SpendingDto(date, storeName, productName, productType, vatRate, price, note)
 
                 val spendingDao = SpendingDao(requireContext())
                 spendingDao.insertIntoSpending(spendingDto)
@@ -118,6 +139,9 @@ class AddSpendingFragment : Fragment() {
 //        return inflater.inflate(R.layout.fragment_add_spending, container, false)
     }
 
+    fun convertLocalDateToDate(localDate: LocalDate): Date {
+        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+    }
 
 
     private fun updateLabel(myCalender: Calendar) {

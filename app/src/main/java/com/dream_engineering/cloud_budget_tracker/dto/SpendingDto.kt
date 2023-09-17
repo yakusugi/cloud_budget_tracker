@@ -1,11 +1,12 @@
 package com.dream_engineering.cloud_budget_tracker.dto
 
 import com.dream_engineering.cloud_budget_tracker.utils.SharedPreferencesManager
+import java.time.LocalDate
 import java.util.Date
 
 class SpendingDto {
 
-    lateinit var date: Date
+    lateinit var date: LocalDate
     var storeName: String = ""
     var productName: String = ""
     var productType: String = ""
@@ -14,7 +15,7 @@ class SpendingDto {
     var note: String = ""
 
     constructor(
-        date: Date,
+        date: LocalDate,
         storeName: String,
         productName: String,
         productType: String,
