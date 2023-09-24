@@ -105,8 +105,6 @@ class AddSpendingFragment : Fragment() {
         noteText = rootView.findViewById(R.id.add_spending_note)
         addSpendingButton = rootView.findViewById(R.id.spending_add_btn)
 
-        val outputDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-
         addSpendingButton.setOnClickListener {
             Log.d("MyTag", "The content of myVariable is: ${date}")
 
@@ -114,7 +112,6 @@ class AddSpendingFragment : Fragment() {
                 myCalendar.timeInMillis // Get the selected date in milliseconds
 
 //            val dateForInsert = convertLocalDateToDate(date)
-
             val storeName: String = storeNameText.getText().toString()
             val productName: String = productNameText.getText().toString()
             val productType: String = productTypeText.getText().toString()
@@ -138,11 +135,6 @@ class AddSpendingFragment : Fragment() {
         return rootView
 //        return inflater.inflate(R.layout.fragment_add_spending, container, false)
     }
-
-    fun convertLocalDateToDate(localDate: LocalDate): Date {
-        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
-    }
-
 
     private fun updateLabel(myCalender: Calendar) {
         val myFormat = "MM-dd-yyyy"
