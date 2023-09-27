@@ -47,6 +47,8 @@ class AddSpendingFragment : Fragment() {
     private lateinit var vatRateText: EditText
     private lateinit var priceText: EditText
     private lateinit var noteText: EditText
+    private lateinit var currencyCodeText: EditText
+    private lateinit var quantityText: EditText
     private lateinit var addSpendingButton: Button
     val date: LocalDate = LocalDate.now()
 
@@ -118,11 +120,14 @@ class AddSpendingFragment : Fragment() {
             val vatRate: Double = vatRateText.getText().toString().toDouble()
             val price: Double = priceText.getText().toString().toDouble()
             val note: String = noteText.getText().toString()
+            val currencyCode: String = currencyCodeText.getText().toString()
+            val quantity: Int = quantityText.getText().toString().toInt()
+
 
 
             try {
                 val spendingDto =
-                    SpendingDto(date, storeName, productName, productType, vatRate, price, note)
+                    SpendingDto(date, storeName, productName, productType, vatRate, price, note, currencyCode, quantity)
 
                 val spendingDao = SpendingDao(requireContext())
                 spendingDao.insertIntoSpending(spendingDto)

@@ -5,15 +5,13 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewParent
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.dream_engineering.cloud_budget_tracker.R
-import com.dream_engineering.cloud_budget_tracker.bean.Spending
-import java.text.FieldPosition
+import com.dream_engineering.cloud_budget_tracker.dto.SpendingDto
 
-class SpendingSearchAdapter(private val context: Activity, private val arrayList: ArrayList<Spending>): ArrayAdapter<Spending>(context,
+class SpendingSearchAdapter(private val context: Activity, private val arrayList: ArrayList<SpendingDto>): ArrayAdapter<SpendingDto>(context,
     R.layout.list_item, arrayList) {
 
     @SuppressLint("MissingInflatedId")
@@ -33,7 +31,7 @@ class SpendingSearchAdapter(private val context: Activity, private val arrayList
         val quantity: TextView = view.findViewById(R.id.spending_quantity_txt)
 
 //        imageView.setImageResource(arrayList[position].imageId)
-        dateView.text = arrayList[position].spendingDate.toString()
+        dateView.text = arrayList[position].date.toString()
         storeName.text = arrayList[position].storeName
         productName.text = arrayList[position].productName
         productType.text = arrayList[position].productType
