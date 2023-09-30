@@ -5,8 +5,9 @@ import java.time.LocalDate
 import java.util.Date
 
 class SpendingDto {
-
     lateinit var date: LocalDate
+    lateinit var dateFrom: LocalDate // Add dateFrom property
+    lateinit var dateTo: LocalDate // Add dateTo property
     var storeName: String = ""
     var productName: String = ""
     var productType: String = ""
@@ -15,6 +16,12 @@ class SpendingDto {
     var note: String = ""
     var currencyCode: String = ""
     var quantity: Int = 0
+
+    constructor(storeName: String, dateFrom: LocalDate, dateTo: LocalDate) {
+        this.storeName = storeName
+        this.dateFrom = dateFrom
+        this.dateTo = dateTo
+    }
 
     constructor(
         date: LocalDate,

@@ -15,7 +15,7 @@
         app:boxStrokeColor="@color/black"
         app:hintTextColor="@color/black"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:startIconDrawable="@drawable/stote_24"
+        app:startIconDrawable="@drawable/store_18"
         android:layout_gravity="center"
         >
 
@@ -38,7 +38,7 @@
         app:boxStrokeColor="@color/black"
         app:hintTextColor="@color/black"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:startIconDrawable="@drawable/calendar_24"
+        app:startIconDrawable="@drawable/calendar_18"
         android:layout_gravity="center"
         >
 
@@ -61,7 +61,7 @@
         app:boxStrokeColor="@color/black"
         app:hintTextColor="@color/black"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:startIconDrawable="@drawable/calendar_24"
+        app:startIconDrawable="@drawable/calendar_18"
         android:layout_gravity="center"
         >
 

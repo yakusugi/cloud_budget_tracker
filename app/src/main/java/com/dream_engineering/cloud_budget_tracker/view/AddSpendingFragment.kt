@@ -123,8 +123,6 @@ class AddSpendingFragment : Fragment() {
             val currencyCode: String = currencyCodeText.getText().toString()
             val quantity: Int = quantityText.getText().toString().toInt()
 
-
-
             try {
                 val spendingDto =
                     SpendingDto(date, storeName, productName, productType, vatRate, price, note, currencyCode, quantity)
