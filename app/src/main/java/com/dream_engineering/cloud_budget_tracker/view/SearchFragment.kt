@@ -3,7 +3,6 @@ package com.dream_engineering.cloud_budget_tracker.view
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +10,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import com.dream_engineering.cloud_budget_tracker.R
 import com.dream_engineering.cloud_budget_tracker.adapter.SpendingSearchAdapter
 import com.dream_engineering.cloud_budget_tracker.dao.SpendingDao
@@ -69,51 +69,42 @@ class SearchFragment : Fragment() {
 
         var selectedDate = LocalDate.now()
 
-        val myCalendar = Calendar.getInstance()
+
 
         // Inside your onCreateView method in AddSpendingFragment
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
         tvDatePickerFrom = rootView.findViewById(R.id.edit_text_spending_date_from)
         tvDatePickerTo = rootView.findViewById(R.id.edit_text_spending_date_to)
-//        tvDatePickerFrom.text = dateFormat.format(myCalendar.time)
-//        tvDatePickerTo.text = dateFormat.format(myCalendar.time)
 
+        val calendar = android.icu.util.Calendar.getInstance()
+        val year = calendar[android.icu.util.Calendar.YEAR]
+        val month = calendar[android.icu.util.Calendar.MONTH]
+        val day = calendar[android.icu.util.Calendar.DAY_OF_MONTH]
 
-
-        // Set an OnClickListener on the TextView(From)
         tvDatePickerFrom.setOnClickListener {
-            val datePicker = DatePickerDialog(
-                requireContext(),
-                DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-                    // Use the 'date' variable here if needed
-                    selectedDate = LocalDate.of(year, month + 1, dayOfMonth)
-                    // Now you can use 'selectedDate' as the selected date
-                    updateLabelFrom(myCalendar)
-                },
-                dateFrom.year, // Use the year from 'date'
-                dateFrom.monthValue - 1, // Subtract 1 because months are 0-based in DatePickerDialog
-                dateFrom.dayOfMonth // Use the day of the month from 'date'
+            val datePickerDialog = DatePickerDialog(
+                requireActivity(),
+                { datePicker, year, month, dayOfMonth ->
+                    var month = month
+                    month = month + 1
+                    val date = "$year-$month-$dayOfMonth"
+                    tvDatePickerFrom.setText(date)
+                }, year, month, day
             )
-            // Show the date picker dialog
-            datePicker.show()
+            datePickerDialog.show()
         }
 
-        // Set an OnClickListener on the TextView(To)
         tvDatePickerTo.setOnClickListener {
-            val datePicker = DatePickerDialog(
-                requireContext(),
-                DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-                    // Use the 'date' variable here if needed
-                    selectedDate = LocalDate.of(year, month + 1, dayOfMonth)
-
-                    updateLabelTo(myCalendar)
-                },
-                dateTo.year, // Use the year from 'date'
-                dateTo.monthValue - 1, // Subtract 1 because months are 0-based in DatePickerDialog
-                dateTo.dayOfMonth // Use the day of the month from 'date'
+            val datePickerDialog = DatePickerDialog(
+                requireActivity(),
+                { datePicker, year, month, dayOfMonth ->
+                    var month = month
+                    month = month + 1
+                    val date = "$year-$month-$dayOfMonth"
+                    tvDatePickerTo.setText(date)
+                }, year, month, day
             )
-            // Show the date picker dialog
-            datePicker.show()
+            datePickerDialog.show()
         }
 
 
@@ -150,17 +141,6 @@ class SearchFragment : Fragment() {
         return rootView
     }
 
-    private fun updateLabelFrom(myCalender: Calendar) {
-        val myFormat = "yyyy-MM-dd"
-        val sdf = SimpleDateFormat(myFormat, Locale.US)
-        tvDatePickerFrom.setText(sdf.format(myCalender.time))
-    }
-
-    private fun updateLabelTo(myCalender: Calendar) {
-        val myFormat = "yyyy-MM-dd"
-        val sdf = SimpleDateFormat(myFormat, Locale.US)
-        tvDatePickerTo.setText(sdf.format(myCalender.time))
-    }
 
     companion object {
         /**
