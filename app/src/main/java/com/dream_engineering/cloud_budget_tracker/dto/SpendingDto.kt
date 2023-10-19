@@ -31,6 +31,24 @@ class SpendingDto {
         vatRate: Double,
         price: Double,
         note: String,
+    ) {
+        this.date = date
+        this.storeName = storeName
+        this.productName = productName
+        this.productType = productType
+        this.vatRate = vatRate
+        this.price = price
+        this.note = note
+    }
+
+    constructor(
+        date: LocalDate,
+        storeName: String,
+        productName: String,
+        productType: String,
+        vatRate: Double,
+        price: Double,
+        note: String,
         currencyCode: String,
         quantity: Int
     ) {

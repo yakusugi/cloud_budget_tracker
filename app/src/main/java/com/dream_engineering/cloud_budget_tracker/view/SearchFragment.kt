@@ -3,6 +3,7 @@ package com.dream_engineering.cloud_budget_tracker.view
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.dream_engineering.cloud_budget_tracker.R
 import com.dream_engineering.cloud_budget_tracker.adapter.SpendingSearchAdapter
@@ -40,8 +42,8 @@ class SearchFragment : Fragment() {
     private lateinit var tvDatePickerFrom: TextView
     private lateinit var tvDatePickerTo: TextView
     private lateinit var searchButton: Button
-    val dateFrom: LocalDate = LocalDate.now()
-    val dateTo: LocalDate = LocalDate.now()
+    var dateFrom: LocalDate = LocalDate.now()
+    var dateTo: LocalDate = LocalDate.now()
 
     private lateinit var binding : ActivityMainBinding
     private lateinit var spendingActivityList : java.util.ArrayList<SpendingDto>
@@ -80,16 +82,18 @@ class SearchFragment : Fragment() {
         val year = calendar[android.icu.util.Calendar.YEAR]
         val month = calendar[android.icu.util.Calendar.MONTH]
         val day = calendar[android.icu.util.Calendar.DAY_OF_MONTH]
+        dateFrom = LocalDate.of(year, month + 1, day)
+        dateTo = LocalDate.of(year, month + 1, day)
 
         tvDatePickerFrom.setOnClickListener {
             val datePickerDialog = DatePickerDialog(
                 requireActivity(),
-                { datePicker, year, month, dayOfMonth ->
-                    var month = month
-                    month = month + 1
-                    val date = "$year-$month-$dayOfMonth"
-                    tvDatePickerFrom.setText(date)
-                }, year, month, day
+                { _, year, month, dayOfMonth ->
+                    // Update dateFrom with the selected date
+                    dateFrom = LocalDate.of(year, month + 1, dayOfMonth)
+                    val formattedDate = dateFrom.toString()
+                    tvDatePickerFrom.text = formattedDate
+                }, dateFrom.year, dateFrom.monthValue - 1, dateFrom.dayOfMonth
             )
             datePickerDialog.show()
         }
@@ -97,12 +101,12 @@ class SearchFragment : Fragment() {
         tvDatePickerTo.setOnClickListener {
             val datePickerDialog = DatePickerDialog(
                 requireActivity(),
-                { datePicker, year, month, dayOfMonth ->
-                    var month = month
-                    month = month + 1
-                    val date = "$year-$month-$dayOfMonth"
-                    tvDatePickerTo.setText(date)
-                }, year, month, day
+                { _, year, month, dayOfMonth ->
+                    // Update dateTo with the selected date
+                    dateTo = LocalDate.of(year, month + 1, dayOfMonth)
+                    val formattedDate = dateTo.toString()
+                    tvDatePickerTo.text = formattedDate
+                }, dateTo.year, dateTo.monthValue - 1, dateTo.dayOfMonth
             )
             datePickerDialog.show()
         }
@@ -114,23 +118,22 @@ class SearchFragment : Fragment() {
 
         searchButton.setOnClickListener {
             val storeName: String = searchNameText.getText().toString()
-
+            val dateFromLocal: LocalDate = LocalDate.parse(tvDatePickerFrom.text.toString())
+            val dateToLocal: LocalDate = LocalDate.parse(tvDatePickerTo.text.toString())
             try {
                 val spendingDto =
-                    SpendingDto(storeName, dateFrom, dateTo)
+                    SpendingDto(storeName, dateFromLocal, dateToLocal)
 
                 val spendingDao = SpendingDao(requireContext())
                 spendingDao.selectSpendingData(spendingDto,
                     onSuccess = { spendingList ->
                         spendingActivityList.clear()
                         spendingActivityList.addAll(spendingList)
-                        // Notify the adapter that the data has changed
                         adapter.notifyDataSetChanged()
                 },
                     onError = { errorMessage ->
-                        // Handle error here, you can access the error message
-                        // This block of code will be executed when there is an error in the API request
-                        // You can display an error message to the user or perform error handling actions
+                        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+                        Log.d("SearchFragment", errorMessage)
                     })
             } catch (e: IOException) {
                 e.printStackTrace()

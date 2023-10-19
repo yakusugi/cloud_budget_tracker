@@ -101,7 +101,7 @@ class SpendingDao(context: Context)  {
             val inputStream = context.assets.open("server_config.properties")
             properties.load(inputStream)
             val serverUrl = properties.getProperty("server_url")
-            val phpSelectFile = properties.getProperty("spending_select_php_file")
+            val phpSelectFile = properties.getProperty("spending_search_php_file")
             val selectUrl = "$serverUrl$phpSelectFile"
             Log.d("select_url", selectUrl)
 
@@ -115,43 +115,55 @@ class SpendingDao(context: Context)  {
             val stringRequest = object : StringRequest(
                 Request.Method.POST, selectUrl,
                 Response.Listener { response ->
+                    Log.d("JSONResponse", response) // Log the JSON response
                     try {
-                        val spendingList = mutableListOf<SpendingDto>()
-                        val jsonArray = JSONArray(response)
+                        val jsonObject = JSONObject(response)
+                        val success = jsonObject.optString("success", "")
 
-                        for (i in 0 until jsonArray.length()) {
-                            val jsonObject = jsonArray.getJSONObject(i)
-                            // Parse data from the JSON object
-                            val date = jsonObject.getString("spending_date")
-                            val storeName = jsonObject.getString("store_name")
-                            val productName = jsonObject.getString("product_name")
-                            val productType = jsonObject.getString("product_type")
-                            val vatRateString = jsonObject.getString("vat_rate")
-                            val priceString = jsonObject.getString("price")
-                            val note = jsonObject.getString("note")
-                            val currencyCode = jsonObject.getString("currency_code")
-                            val quantityString = jsonObject.getString("quantity")
+                        if (success == "1") {
+                            val jsonArray = jsonObject.optJSONArray("spendingList")
+                            if (jsonArray != null) {
+                                val spendingList = mutableListOf<SpendingDto>()
+                                for (i in 0 until jsonArray.length()) {
+                                    val jsonObject = jsonArray.getJSONObject(i)
+                                    // Parse data from the JSON object
+                                    val date = jsonObject.getString("spending_date")
+                                    val storeName = jsonObject.getString("store_name")
+                                    val productName = jsonObject.getString("product_name")
+                                    val productType = jsonObject.getString("product_type")
+                                    val vatRateString = jsonObject.getString("vat_rate")
+                                    val priceString = jsonObject.getString("price")
+                                    val note = jsonObject.getString("note")
+                                    val currencyCode = jsonObject.getString("currency_code")
+                                    val quantityString = jsonObject.getString("quantity")
 
-                            val vatRate = vatRateString.toDoubleOrNull() ?: 0.0 // Convert to Double or default to 0.0 if conversion fails
-                            val price = priceString.toDoubleOrNull() ?: 0.0 // Convert to Double or default to 0.0 if conversion fails
-                            val quantity = quantityString.toIntOrNull() ?: 0 // Convert to Int or default to 0 if conversion fails
+                                    val vatRate = vatRateString.toDoubleOrNull() ?: 0.0 // Convert to Double or default to 0.0 if conversion fails
+                                    val price = priceString.toDoubleOrNull() ?: 0.0 // Convert to Double or default to 0.0 if conversion fails
+                                    val quantity = quantityString.toIntOrNull() ?: 0 // Convert to Int or default to 0 if conversion fails
 
-                            val spendingDto = SpendingDto(
-                                LocalDate.parse(date),
-                                storeName,
-                                productName,
-                                productType,
-                                vatRate,
-                                price,
-                                note,
-                                currencyCode,
-                                quantity
-                            )
-                            spendingList.add(spendingDto)
+                                    val spendingDto = SpendingDto(
+                                        LocalDate.parse(date),
+                                        storeName,
+                                        productName,
+                                        productType,
+                                        vatRate,
+                                        price,
+                                        note,
+                                        currencyCode,
+                                        quantity
+                                    )
+                                    spendingList.add(spendingDto)
+                                }
+
+                                // Invoke the onSuccess callback with the list of SpendingDto objects
+                                onSuccess(spendingList)
+                            } else {
+                                onError("No spending data found")
+                            }
+                        } else {
+                            val errorMessage = jsonObject.optString("error_message", "Error parsing JSON")
+                            onError(errorMessage)
                         }
-
-                        // Invoke the onSuccess callback with the list of SpendingDto objects
-                        onSuccess(spendingList)
                     } catch (e: JSONException) {
                         Log.e("JSONException", e.toString())
                         e.printStackTrace()
@@ -175,5 +187,6 @@ class SpendingDao(context: Context)  {
             onError("Error loading server configuration")
         }
     }
+
 
 }
