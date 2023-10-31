@@ -121,7 +121,7 @@ class SpendingDao(context: Context)  {
                         val success = jsonObject.optString("success", "")
 
                         if (success == "1") {
-                            val jsonArray = jsonObject.optJSONArray("spendingList")
+                            val jsonArray = jsonObject.optJSONArray("result")
                             if (jsonArray != null) {
                                 val spendingList = mutableListOf<SpendingDto>()
                                 for (i in 0 until jsonArray.length()) {
