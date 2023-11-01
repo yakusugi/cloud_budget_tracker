@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
+import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -45,6 +46,7 @@ class SearchFragment : Fragment() {
     var dateFrom: LocalDate = LocalDate.now()
     var dateTo: LocalDate = LocalDate.now()
 
+
     private lateinit var binding : ActivityMainBinding
     private lateinit var spendingActivityList : java.util.ArrayList<SpendingDto>
     private lateinit var listView: ListView
@@ -77,6 +79,7 @@ class SearchFragment : Fragment() {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
         tvDatePickerFrom = rootView.findViewById(R.id.edit_text_spending_date_from)
         tvDatePickerTo = rootView.findViewById(R.id.edit_text_spending_date_to)
+        val radioGroup: RadioGroup = rootView.findViewById(R.id.radio_group)
 
         val calendar = android.icu.util.Calendar.getInstance()
         val year = calendar[android.icu.util.Calendar.YEAR]
@@ -117,27 +120,50 @@ class SearchFragment : Fragment() {
         searchButton = rootView.findViewById(R.id.search_btn)
 
         searchButton.setOnClickListener {
-            val storeName: String = searchNameText.getText().toString()
+            val searchKey: String = searchNameText.getText().toString()
             val dateFromLocal: LocalDate = LocalDate.parse(tvDatePickerFrom.text.toString())
             val dateToLocal: LocalDate = LocalDate.parse(tvDatePickerTo.text.toString())
-            try {
-                val spendingDto =
-                    SpendingDto(storeName, dateFromLocal, dateToLocal)
 
-                val spendingDao = SpendingDao(requireContext())
-                spendingDao.selectSpendingData(spendingDto,
-                    onSuccess = { spendingList ->
-                        spendingActivityList.clear()
-                        spendingActivityList.addAll(spendingList)
-                        adapter.notifyDataSetChanged()
-                },
-                    onError = { errorMessage ->
-                        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
-                        Log.d("SearchFragment", errorMessage)
-                    })
-            } catch (e: IOException) {
-                e.printStackTrace()
+            if (radioGroup.getCheckedRadioButtonId() == R.id.search_store_radio) {
+                try {
+                    val spendingDto =
+                        SpendingDto(searchKey, dateFromLocal, dateToLocal)
+
+                    val spendingDao = SpendingDao(requireContext())
+                    spendingDao.selectSpendingStoreData(spendingDto,
+                        onSuccess = { spendingList ->
+                            spendingActivityList.clear()
+                            spendingActivityList.addAll(spendingList)
+                            adapter.notifyDataSetChanged()
+                        },
+                        onError = { errorMessage ->
+                            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+                            Log.d("SearchFragment", errorMessage)
+                        })
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            } else if (radioGroup.getCheckedRadioButtonId() == R.id.search_product_name_radio) {
+                try {
+                    val spendingDto =
+                        SpendingDto(searchKey, dateFromLocal, dateToLocal)
+
+                    val spendingDao = SpendingDao(requireContext())
+                    spendingDao.selectSpendingProductNameData(spendingDto,
+                        onSuccess = { spendingList ->
+                            spendingActivityList.clear()
+                            spendingActivityList.addAll(spendingList)
+                            adapter.notifyDataSetChanged()
+                        },
+                        onError = { errorMessage ->
+                            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+                            Log.d("SearchFragment", errorMessage)
+                        })
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
             }
+
         }
 
         // Inflate the layout for this fragment
