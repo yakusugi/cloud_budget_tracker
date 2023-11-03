@@ -162,6 +162,25 @@ class SearchFragment : Fragment() {
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
+            } else if (radioGroup.getCheckedRadioButtonId() == R.id.search_product_type_radio) {
+                try {
+                    val spendingDto =
+                        SpendingDto(searchKey, dateFromLocal, dateToLocal)
+
+                    val spendingDao = SpendingDao(requireContext())
+                    spendingDao.selectSpendingProductTypeData(spendingDto,
+                        onSuccess = { spendingList ->
+                            spendingActivityList.clear()
+                            spendingActivityList.addAll(spendingList)
+                            adapter.notifyDataSetChanged()
+                        },
+                        onError = { errorMessage ->
+                            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+                            Log.d("SearchFragment", errorMessage)
+                        })
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
             }
 
         }
