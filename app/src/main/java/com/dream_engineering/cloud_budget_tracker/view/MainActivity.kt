@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         bankAddBtn = binding.bankBtn
 
         setContentView(binding.root)
-        replaceFragments(StatsFragment())
+        replaceFragments(DashFragment())
 
         addBtn.setOnClickListener() {
             onAddBtnClicked()
@@ -103,6 +103,7 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavView.setOnItemReselectedListener {
 
             when(it.itemId) {
+                R.id.dash -> replaceFragments(DashFragment())
                 R.id.stats -> replaceFragments(StatsFragment())
                 R.id.search -> replaceFragments(SearchFragment())
                 R.id.exchange -> replaceFragments(ExchangeFragment())
