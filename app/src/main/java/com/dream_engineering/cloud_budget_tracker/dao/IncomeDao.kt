@@ -90,9 +90,9 @@ class IncomeDao(context: Context)  {
         return 0
     }
 
-    fun selectSpendingStoreData(
-        spendingDto: SpendingDto,
-        onSuccess: (List<SpendingDto>) -> Unit,
+    fun selectIncomeNameData(
+        incomeDto: IncomeDto,
+        onSuccess: (List<IncomeDto>) -> Unit,
         onError: (String) -> Unit
     ) {
         try {
@@ -100,16 +100,16 @@ class IncomeDao(context: Context)  {
             val inputStream = context.assets.open("server_config.properties")
             properties.load(inputStream)
             val serverUrl = properties.getProperty("server_url")
-            val phpSelectFile = properties.getProperty("spending_store_search_php_file")
+            val phpSelectFile = properties.getProperty("income_name_search_php_file")
             val selectUrl = "$serverUrl$phpSelectFile"
             Log.d("select_url", selectUrl)
 
             // Create a map of parameters to send in the POST request
             val params = HashMap<String, String>()
             params["email"] = SharedPreferencesManager.getUserEmail(context).toString()
-            params["store_name"] = spendingDto.storeName
-            params["date_from"] = spendingDto.dateFrom.toString()
-            params["date_to"] = spendingDto.dateTo.toString()
+            params["income_name"] = incomeDto.incomeName
+            params["date_from"] = incomeDto.dateFrom.toString()
+            params["date_to"] = incomeDto.dateTo.toString()
 
             val stringRequest = object : StringRequest(
                 Request.Method.POST, selectUrl,
@@ -122,40 +122,31 @@ class IncomeDao(context: Context)  {
                         if (success == "1") {
                             val jsonArray = jsonObject.optJSONArray("result")
                             if (jsonArray != null) {
-                                val spendingList = mutableListOf<SpendingDto>()
+                                val incomeList = mutableListOf<IncomeDto>()
                                 for (i in 0 until jsonArray.length()) {
                                     val jsonObject = jsonArray.getJSONObject(i)
                                     // Parse data from the JSON object
-                                    val date = jsonObject.getString("spending_date")
-                                    val storeName = jsonObject.getString("store_name")
-                                    val productName = jsonObject.getString("product_name")
-                                    val productType = jsonObject.getString("product_type")
-                                    val vatRateString = jsonObject.getString("vat_rate")
-                                    val priceString = jsonObject.getString("price")
+                                    val date = jsonObject.getString("income_date")
+                                    val incomeName = jsonObject.getString("income_name")
+                                    val incomeCategory = jsonObject.getString("income_category")
+                                    val incomeString = jsonObject.getString("income")
                                     val note = jsonObject.getString("note")
                                     val currencyCode = jsonObject.getString("currency_code")
-                                    val quantityString = jsonObject.getString("quantity")
+                                    val income = incomeString.toDoubleOrNull() ?: 0.0 // Convert to Double or default to 0.0 if conversion fails
 
-                                    val vatRate = vatRateString.toDoubleOrNull() ?: 0.0 // Convert to Double or default to 0.0 if conversion fails
-                                    val price = priceString.toDoubleOrNull() ?: 0.0 // Convert to Double or default to 0.0 if conversion fails
-                                    val quantity = quantityString.toIntOrNull() ?: 0 // Convert to Int or default to 0 if conversion fails
-
-                                    val spendingDto = SpendingDto(
+                                    val incomeDto = IncomeDto(
                                         LocalDate.parse(date),
-                                        storeName,
-                                        productName,
-                                        productType,
-                                        vatRate,
-                                        price,
+                                        incomeName,
+                                        incomeCategory,
+                                        income,
                                         note,
-                                        currencyCode,
-                                        quantity
+                                        currencyCode
                                     )
-                                    spendingList.add(spendingDto)
+                                    incomeList.add(incomeDto)
                                 }
 
                                 // Invoke the onSuccess callback with the list of SpendingDto objects
-                                onSuccess(spendingList)
+                                onSuccess(incomeList)
                             } else {
                                 onError("No spending data found")
                             }

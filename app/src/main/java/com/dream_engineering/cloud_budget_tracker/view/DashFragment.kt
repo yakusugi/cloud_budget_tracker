@@ -66,7 +66,7 @@ class DashFragment : Fragment() {
         // Set OnClickListener for incomeCard
         incomeCard?.setOnClickListener {
             // Inside your fragment or activity where you want to perform the fragment transaction
-            val fragmentManager = childFragmentManager
+            val fragmentManager = parentFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()
 
             // Replace the current fragment with the new one

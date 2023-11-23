@@ -14,6 +14,10 @@ class IncomeDto {
     var note: String = ""
     var currencyCode: String = ""
 
+
+
+
+
     constructor(
         date: LocalDate,
         dateFrom: LocalDate,
@@ -46,5 +50,27 @@ class IncomeDto {
         this.incomeCategoryName = incomeCategoryName
         this.income = income
         this.note = note
+    }
+
+    constructor(incomeName: String, dateFrom: LocalDate, dateTo: LocalDate) {
+        this.incomeName = incomeName
+        this.dateFrom = dateFrom
+        this.dateTo = dateTo
+    }
+
+    constructor(
+        dateTo: LocalDate,
+        incomeName: String,
+        incomeCategoryName: String,
+        income: Double,
+        note: String,
+        currencyCode: String
+    ) {
+        this.dateTo = dateTo
+        this.incomeName = incomeName
+        this.incomeCategoryName = incomeCategoryName
+        this.income = income
+        this.note = note
+        this.currencyCode = currencyCode
     }
 }
