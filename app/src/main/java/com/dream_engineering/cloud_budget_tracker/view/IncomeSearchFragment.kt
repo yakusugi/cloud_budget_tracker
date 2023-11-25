@@ -16,9 +16,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.dream_engineering.cloud_budget_tracker.R
 import com.dream_engineering.cloud_budget_tracker.adapter.IncomeSearchAdapter
-import com.dream_engineering.cloud_budget_tracker.adapter.SpendingSearchAdapter
 import com.dream_engineering.cloud_budget_tracker.dao.IncomeDao
-import com.dream_engineering.cloud_budget_tracker.dao.SpendingDao
 import com.dream_engineering.cloud_budget_tracker.databinding.ActivityMainBinding
 import com.dream_engineering.cloud_budget_tracker.dto.IncomeDto
 import java.io.IOException
@@ -72,8 +70,6 @@ class IncomeSearchFragment : Fragment() {
         listView.adapter = adapter
 
         var selectedDate = LocalDate.now()
-
-
 
         // Inside your onCreateView method in AddSpendingFragment
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)

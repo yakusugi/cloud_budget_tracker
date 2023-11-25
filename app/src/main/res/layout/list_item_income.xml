@@ -67,6 +67,13 @@
                     android:textColor="@color/black"
                     android:textSize="20sp"/>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/income_currency_code_txt"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"/>
+
             </LinearLayout>
 
         </LinearLayout>
