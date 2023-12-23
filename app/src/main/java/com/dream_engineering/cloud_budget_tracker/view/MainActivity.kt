@@ -98,6 +98,19 @@ class MainActivity : AppCompatActivity() {
 
         bankAddBtn.setOnClickListener() {
             Toast.makeText(this, "bank btn clicked", Toast.LENGTH_SHORT).show()
+            val fragment = AddBankFragment() // Replace with your fragment class
+
+            // Begin a fragment transaction
+            val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+
+            // Replace the fragment_container with your fragment
+            transaction.replace(R.id.frame_layout, fragment)
+
+            // Add the transaction to the back stack (optional, for back navigation)
+            transaction.addToBackStack(null)
+
+            // Commit the transaction
+            transaction.commit()
         }
 
         binding.bottomNavView.setOnItemReselectedListener {
