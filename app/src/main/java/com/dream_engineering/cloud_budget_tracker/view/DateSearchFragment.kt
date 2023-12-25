@@ -1,9 +1,9 @@
 package com.dream_engineering.cloud_budget_tracker.view
 
-import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +13,6 @@ import android.widget.ListView
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import com.dream_engineering.cloud_budget_tracker.R
 import com.dream_engineering.cloud_budget_tracker.adapter.SpendingSearchAdapter
 import com.dream_engineering.cloud_budget_tracker.dao.SpendingDao
@@ -22,7 +21,6 @@ import com.dream_engineering.cloud_budget_tracker.dto.SpendingDto
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.util.Calendar
 import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
@@ -32,23 +30,24 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [SearchFragment.newInstance] factory method to
+ * Use the [DateSearchFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class SearchFragment : Fragment() {
+class DateSearchFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private lateinit var searchNameText: EditText
+
     private lateinit var tvDatePickerFrom: TextView
     private lateinit var tvDatePickerTo: TextView
+    private lateinit var currencyEditText: EditText
+    private lateinit var searchResultTextView: TextView
     private lateinit var searchButton: Button
     var dateFrom: LocalDate = LocalDate.now()
     var dateTo: LocalDate = LocalDate.now()
 
-
-    private lateinit var binding : ActivityMainBinding
-    private lateinit var spendingActivityList : java.util.ArrayList<SpendingDto>
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var spendingActivityList: java.util.ArrayList<SpendingDto>
     private lateinit var listView: ListView
     private lateinit var adapter: SpendingSearchAdapter
 
@@ -60,24 +59,23 @@ class SearchFragment : Fragment() {
         }
     }
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         spendingActivityList = ArrayList()
-        val rootView = inflater.inflate(R.layout.fragment_search, container, false)
-        listView = rootView.findViewById(R.id.search_list_view)
+        val rootView = inflater.inflate(R.layout.fragment_date_search, container, false)
+        listView = rootView.findViewById(R.id.date_search_list_view)
         adapter = SpendingSearchAdapter(requireActivity(), spendingActivityList)
         listView.adapter = adapter
 
-        var selectedDate = LocalDate.now()
+//        var selectedDate = LocalDate.now()
 
         // Inside your onCreateView method in AddSpendingFragment
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-        tvDatePickerFrom = rootView.findViewById(R.id.edit_text_spending_date_from)
-        tvDatePickerTo = rootView.findViewById(R.id.edit_text_spending_date_to)
-        val radioGroup: RadioGroup = rootView.findViewById(R.id.radio_group)
+        tvDatePickerFrom = rootView.findViewById(R.id.edit_text_date_date_from)
+        tvDatePickerTo = rootView.findViewById(R.id.edit_text_date_date_to)
+        currencyEditText = rootView.findViewById(R.id.edit_text_date_currency)
 
         val calendar = android.icu.util.Calendar.getInstance()
         val year = calendar[android.icu.util.Calendar.YEAR]
@@ -113,80 +111,36 @@ class SearchFragment : Fragment() {
         }
 
 
-        searchNameText = rootView.findViewById(R.id.edit_text_spending_store_name)
+        searchResultTextView = rootView.findViewById(R.id.date_date_calc_result_tv)
 
-        searchButton = rootView.findViewById(R.id.search_btn)
+        searchButton = rootView.findViewById(R.id.date_search_btn)
+
+        var selectedDate = LocalDate.now()
 
         searchButton.setOnClickListener {
-            val searchKey: String = searchNameText.getText().toString()
+            val searchCurrency: String = currencyEditText.getText().toString()
             val dateFromLocal: LocalDate = LocalDate.parse(tvDatePickerFrom.text.toString())
             val dateToLocal: LocalDate = LocalDate.parse(tvDatePickerTo.text.toString())
 
-            if (radioGroup.getCheckedRadioButtonId() == R.id.search_store_radio) {
-                try {
-                    val spendingDto =
-                        SpendingDto(searchKey, dateFromLocal, dateToLocal)
+            val spendingDto =
+                SpendingDto(searchCurrency, dateFromLocal, dateToLocal)
 
-                    val spendingDao = SpendingDao(requireContext())
-                    spendingDao.selectSpendingStoreData(spendingDto,
-                        onSuccess = { spendingList ->
-                            spendingActivityList.clear()
-                            spendingActivityList.addAll(spendingList)
-                            adapter.notifyDataSetChanged()
-                        },
-                        onError = { errorMessage ->
-                            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
-                            Log.d("SearchFragment", errorMessage)
-                        })
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-            } else if (radioGroup.getCheckedRadioButtonId() == R.id.search_product_name_radio) {
-                try {
-                    val spendingDto =
-                        SpendingDto(searchKey, dateFromLocal, dateToLocal)
-
-                    val spendingDao = SpendingDao(requireContext())
-                    spendingDao.selectSpendingProductNameData(spendingDto,
-                        onSuccess = { spendingList ->
-                            spendingActivityList.clear()
-                            spendingActivityList.addAll(spendingList)
-                            adapter.notifyDataSetChanged()
-                        },
-                        onError = { errorMessage ->
-                            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
-                            Log.d("SearchFragment", errorMessage)
-                        })
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-            } else if (radioGroup.getCheckedRadioButtonId() == R.id.search_product_type_radio) {
-                try {
-                    val spendingDto =
-                        SpendingDto(searchKey, dateFromLocal, dateToLocal)
-
-                    val spendingDao = SpendingDao(requireContext())
-                    spendingDao.selectSpendingProductTypeData(spendingDto,
-                        onSuccess = { spendingList ->
-                            spendingActivityList.clear()
-                            spendingActivityList.addAll(spendingList)
-                            adapter.notifyDataSetChanged()
-                        },
-                        onError = { errorMessage ->
-                            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
-                            Log.d("SearchFragment", errorMessage)
-                        })
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-            }
-
+            val spendingDao = SpendingDao(requireContext())
+            spendingDao.selectSpendingDateData(spendingDto,
+                onSuccess = { spendingList ->
+                    spendingActivityList.clear()
+                    spendingActivityList.addAll(spendingList)
+                    adapter.notifyDataSetChanged()
+                },
+                onError = { errorMessage ->
+                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT)
+                        .show()
+                    Log.d("SearchFragment", errorMessage)
+                })
         }
 
-        // Inflate the layout for this fragment
         return rootView
     }
-
 
     companion object {
         /**
@@ -195,12 +149,12 @@ class SearchFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment SearchFragment.
+         * @return A new instance of fragment DateSearchFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            SearchFragment().apply {
+            DateSearchFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

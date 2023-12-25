@@ -30,6 +30,7 @@ class DashFragment : Fragment() {
     private var incomeCard: CardView? = null
     private var spendingCard: CardView? = null
     private var bankCard: CardView? = null
+    private var dateCard: CardView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +48,7 @@ class DashFragment : Fragment() {
         incomeCard = view.findViewById<View>(R.id.income_card) as CardView
         spendingCard = view.findViewById<View>(R.id.spending_card) as CardView
         bankCard = view.findViewById<View>(R.id.bank_card) as CardView
-
-
-
-
+        dateCard = view.findViewById<View>(R.id.date_card) as CardView
 
         return view
     }
@@ -62,6 +60,7 @@ class DashFragment : Fragment() {
         incomeCard = view.findViewById(R.id.income_card)
         spendingCard = view.findViewById(R.id.spending_card)
         bankCard = view.findViewById(R.id.bank_card)
+        dateCard = view.findViewById(R.id.date_card)
 
         // Set OnClickListener for incomeCard
         incomeCard?.setOnClickListener {
@@ -78,15 +77,25 @@ class DashFragment : Fragment() {
 
             // Commit the transaction
             fragmentTransaction.commit()
+        }
 
+        // Set OnClickListener for dateCard
+        dateCard?.setOnClickListener {
+            // Inside your fragment or activity where you want to perform the fragment transaction
+            val fragmentManager = parentFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
 
+            // Replace the current fragment with the new one
+            val dateSearchFragment = DateSearchFragment()
+            fragmentTransaction.replace(R.id.frame_layout, dateSearchFragment)
+
+            // Add the transaction to the back stack so the user can navigate back
+            fragmentTransaction.addToBackStack(null)
+
+            // Commit the transaction
+            fragmentTransaction.commit()
         }
     }
-
-
-
-
-
 
     companion object {
         /**
