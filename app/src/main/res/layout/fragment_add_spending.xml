@@ -201,6 +201,27 @@
                 android:textCursorDrawable="@null" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:boxStrokeColor="@color/black"
+            app:hintTextColor="@color/black"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:startIconDrawable="@drawable/usd_circle_18"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/add_spending_currency_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Currency Code"
+                android:inputType="text"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textCursorDrawable="@null" />
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <Button
             android:id="@+id/spending_add_btn"
