@@ -17,12 +17,14 @@ import androidx.fragment.app.Fragment
 import com.dream_engineering.cloud_budget_tracker.R
 import com.dream_engineering.cloud_budget_tracker.adapter.SpendingSearchAdapter
 import com.dream_engineering.cloud_budget_tracker.dao.SpendingDao
+import com.dream_engineering.cloud_budget_tracker.dao.SpendingStoreNameDao
+import com.dream_engineering.cloud_budget_tracker.dao.SpendingStoreNameSumDao
 import com.dream_engineering.cloud_budget_tracker.databinding.ActivityMainBinding
 import com.dream_engineering.cloud_budget_tracker.dto.SpendingDto
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.util.Calendar
 import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
@@ -42,9 +44,12 @@ class SearchFragment : Fragment() {
     private lateinit var searchNameText: EditText
     private lateinit var tvDatePickerFrom: TextView
     private lateinit var tvDatePickerTo: TextView
+    private lateinit var searchCalcResultText: TextView
     private lateinit var searchButton: Button
     var dateFrom: LocalDate = LocalDate.now()
     var dateTo: LocalDate = LocalDate.now()
+    var spendingSum: String = ""
+    var spendingSumResult: Double = 0.0
 
 
     private lateinit var binding : ActivityMainBinding
@@ -114,6 +119,7 @@ class SearchFragment : Fragment() {
 
 
         searchNameText = rootView.findViewById(R.id.edit_text_spending_store_name)
+        searchCalcResultText = rootView.findViewById(R.id.store_name_calc_result_tv)
 
         searchButton = rootView.findViewById(R.id.search_btn)
 
@@ -127,8 +133,8 @@ class SearchFragment : Fragment() {
                     val spendingDto =
                         SpendingDto(searchKey, dateFromLocal, dateToLocal)
 
-                    val spendingDao = SpendingDao(requireContext())
-                    spendingDao.selectSpendingStoreData(spendingDto,
+                    val spendingStoreNameDao = SpendingStoreNameDao(requireContext())
+                    spendingStoreNameDao.selectSpendingStoreData(spendingDto,
                         onSuccess = { spendingList ->
                             spendingActivityList.clear()
                             spendingActivityList.addAll(spendingList)
@@ -141,6 +147,33 @@ class SearchFragment : Fragment() {
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
+
+                //todo: add sum result calc here
+                try {
+                    val spendingDto = SpendingDto(searchKey, dateFromLocal, dateToLocal)
+                    val spendingStoreNameSumDao = SpendingStoreNameSumDao(requireContext())
+
+                    // Call the selectSpendingStoreCalc method
+                    spendingStoreNameSumDao.selectSpendingStoreCalc(
+                        spendingDto,
+                        onSuccess = { spendingSum ->
+                            // Update the TextView on the UI thread
+                            activity?.runOnUiThread {
+                                val resultTextView = view?.findViewById<MaterialAutoCompleteTextView>(R.id.store_name_calc_result_tv)
+                                resultTextView?.setText(spendingSum.toString())
+                            }
+                        },
+                        onError = { errorMessage ->
+                            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+                            Log.d("SearchFragment", errorMessage)
+                        }
+                    )
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+
+
+
             } else if (radioGroup.getCheckedRadioButtonId() == R.id.search_product_name_radio) {
                 try {
                     val spendingDto =

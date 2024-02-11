@@ -8,6 +8,7 @@ class SpendingDto {
     lateinit var date: LocalDate
     lateinit var dateFrom: LocalDate // Add dateFrom property
     lateinit var dateTo: LocalDate // Add dateTo property
+    var spendingCalcSum: Double = 0.0 // Calculated sum
     var storeName: String = ""
     var productName: String = ""
     var productType: String = ""
@@ -16,6 +17,10 @@ class SpendingDto {
     var note: String = ""
     var currencyCode: String = ""
     var quantity: Int = 0
+
+    constructor(spendingCalcSum: Double) {
+        this.spendingCalcSum = spendingCalcSum
+    }
 
     constructor(storeName: String, dateFrom: LocalDate, dateTo: LocalDate) {
         this.storeName = storeName
@@ -31,6 +36,7 @@ class SpendingDto {
         vatRate: Double,
         price: Double,
         note: String,
+        currencyCode: String
     ) {
         this.date = date
         this.storeName = storeName
@@ -39,6 +45,7 @@ class SpendingDto {
         this.vatRate = vatRate
         this.price = price
         this.note = note
+        this.currencyCode = currencyCode
     }
 
     constructor(

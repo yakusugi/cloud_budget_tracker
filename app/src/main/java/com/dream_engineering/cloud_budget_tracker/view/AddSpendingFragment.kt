@@ -14,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.dream_engineering.cloud_budget_tracker.R
 import com.dream_engineering.cloud_budget_tracker.dao.SpendingDao
+import com.dream_engineering.cloud_budget_tracker.dao.SpendingInsertDao
 import com.dream_engineering.cloud_budget_tracker.dto.SpendingDto
 import com.dream_engineering.cloud_budget_tracker.dto.UserDto
 import com.dream_engineering.cloud_budget_tracker.utils.SharedPreferencesManager
@@ -47,8 +48,9 @@ class AddSpendingFragment : Fragment() {
     private lateinit var vatRateText: EditText
     private lateinit var priceText: EditText
     private lateinit var noteText: EditText
+    private lateinit var currencyCodeText: EditText
     private lateinit var addSpendingButton: Button
-    val date: LocalDate = LocalDate.now()
+    var date: LocalDate = LocalDate.now()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,27 +75,17 @@ class AddSpendingFragment : Fragment() {
 
         val myCalendar = Calendar.getInstance()
 
-        // Set an OnClickListener on the TextView
         tvDatePicker.setOnClickListener {
-            val datePicker = DatePickerDialog(
-                requireContext(),
-                DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-                    // Use the 'date' variable here if needed
-                    val selectedDate = LocalDate.of(
-                        year,
-                        month + 1,
-                        dayOfMonth
-                    ) // +1 because months are 0-based in DatePickerDialog
-                    // Now you can use 'selectedDate' as the selected date
-                    updateLabel(myCalendar)
-                },
-                date.year, // Use the year from 'date'
-                date.monthValue - 1, // Subtract 1 because months are 0-based in DatePickerDialog
-                date.dayOfMonth // Use the day of the month from 'date'
-
+            val datePickerDialog = DatePickerDialog(
+                requireActivity(),
+                { _, year, month, dayOfMonth ->
+                    // Update dateFrom with the selected date
+                    date = LocalDate.of(year, month + 1, dayOfMonth)
+                    val formattedDate = date.toString()
+                    tvDatePicker.text = formattedDate
+                }, date.year, date.monthValue - 1, date.dayOfMonth
             )
-            // Show the date picker dialog
-            datePicker.show()
+            datePickerDialog.show()
         }
 
 
@@ -103,6 +95,7 @@ class AddSpendingFragment : Fragment() {
         vatRateText = rootView.findViewById(R.id.add_spending_vate_rate)
         priceText = rootView.findViewById(R.id.add_spending_price)
         noteText = rootView.findViewById(R.id.add_spending_note)
+        currencyCodeText = rootView.findViewById(R.id.add_spending_currency_code)
         addSpendingButton = rootView.findViewById(R.id.spending_add_btn)
 
         addSpendingButton.setOnClickListener {
@@ -118,13 +111,14 @@ class AddSpendingFragment : Fragment() {
             val vatRate: Double = vatRateText.getText().toString().toDouble()
             val price: Double = priceText.getText().toString().toDouble()
             val note: String = noteText.getText().toString()
+            val currencyCode: String = currencyCodeText.getText().toString()
 
             try {
                 val spendingDto =
-                    SpendingDto(date, storeName, productName, productType, vatRate, price, note)
+                    SpendingDto(date, storeName, productName, productType, vatRate, price, note, currencyCode)
 
-                val spendingDao = SpendingDao(requireContext())
-                spendingDao.insertIntoSpending(spendingDto)
+                val spendingInsertDao = SpendingInsertDao(requireContext())
+                spendingInsertDao.insertIntoSpending(spendingDto)
             } catch (e: IOException) {
                 e.printStackTrace()
             }
