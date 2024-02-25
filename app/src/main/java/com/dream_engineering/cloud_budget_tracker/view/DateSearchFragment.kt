@@ -15,7 +15,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.dream_engineering.cloud_budget_tracker.R
 import com.dream_engineering.cloud_budget_tracker.adapter.SpendingSearchAdapter
-import com.dream_engineering.cloud_budget_tracker.dao.SpendingDao
+import com.dream_engineering.cloud_budget_tracker.dao.SpendingDateDao
 import com.dream_engineering.cloud_budget_tracker.databinding.ActivityMainBinding
 import com.dream_engineering.cloud_budget_tracker.dto.SpendingDto
 import java.io.IOException
@@ -125,8 +125,8 @@ class DateSearchFragment : Fragment() {
             val spendingDto =
                 SpendingDto(searchCurrency, dateFromLocal, dateToLocal)
 
-            val spendingDao = SpendingDao(requireContext())
-            spendingDao.selectSpendingDateData(spendingDto,
+            val spendingDateDao = SpendingDateDao(requireContext())
+            spendingDateDao.selectSpendingDateData(spendingDto,
                 onSuccess = { spendingList ->
                     spendingActivityList.clear()
                     spendingActivityList.addAll(spendingList)

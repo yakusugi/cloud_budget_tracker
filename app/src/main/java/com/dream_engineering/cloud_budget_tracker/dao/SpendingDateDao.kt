@@ -20,10 +20,10 @@ import java.io.IOException
 import java.time.LocalDate
 import java.util.Properties
 
-class SpendingProductTypeDao(context: Context)  {
+class SpendingDateDao(context: Context)  {
     private val context: Context = context.applicationContext
 
-    fun selectSpendingProductTypeData(
+    fun selectSpendingDateData(
         spendingDto: SpendingDto,
         onSuccess: (List<SpendingDto>) -> Unit,
         onError: (String) -> Unit
@@ -33,14 +33,14 @@ class SpendingProductTypeDao(context: Context)  {
             val inputStream = context.assets.open("server_config.properties")
             properties.load(inputStream)
             val serverUrl = properties.getProperty("server_url")
-            val phpSelectFile = properties.getProperty("spending_product_type_search_php_file")
+            val phpSelectFile = properties.getProperty("spending_date_search_php_file")
             val selectUrl = "$serverUrl$phpSelectFile"
             Log.d("select_url", selectUrl)
 
             // Create a map of parameters to send in the POST request
             val params = HashMap<String, String>()
             params["email"] = SharedPreferencesManager.getUserEmail(context).toString()
-            params["product_type"] = spendingDto.productType
+            params["currency_code"] = spendingDto.currencyCode
             params["date_from"] = spendingDto.dateFrom.toString()
             params["date_to"] = spendingDto.dateTo.toString()
 
@@ -118,6 +118,4 @@ class SpendingProductTypeDao(context: Context)  {
             onError("Error loading server configuration")
         }
     }
-
-
 }

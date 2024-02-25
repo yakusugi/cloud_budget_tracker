@@ -13,7 +13,6 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.dream_engineering.cloud_budget_tracker.R
-import com.dream_engineering.cloud_budget_tracker.dao.SpendingDao
 import com.dream_engineering.cloud_budget_tracker.dao.SpendingInsertDao
 import com.dream_engineering.cloud_budget_tracker.dto.SpendingDto
 import com.dream_engineering.cloud_budget_tracker.dto.UserDto

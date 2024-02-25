@@ -16,7 +16,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.dream_engineering.cloud_budget_tracker.R
 import com.dream_engineering.cloud_budget_tracker.adapter.SpendingSearchAdapter
-import com.dream_engineering.cloud_budget_tracker.dao.SpendingDao
+import com.dream_engineering.cloud_budget_tracker.dao.SpendingProductNameDao
+import com.dream_engineering.cloud_budget_tracker.dao.SpendingProductTypeDao
 import com.dream_engineering.cloud_budget_tracker.dao.SpendingStoreNameDao
 import com.dream_engineering.cloud_budget_tracker.dao.SpendingStoreNameSumDao
 import com.dream_engineering.cloud_budget_tracker.databinding.ActivityMainBinding
@@ -179,8 +180,8 @@ class SearchFragment : Fragment() {
                     val spendingDto =
                         SpendingDto(searchKey, dateFromLocal, dateToLocal)
 
-                    val spendingDao = SpendingDao(requireContext())
-                    spendingDao.selectSpendingProductNameData(spendingDto,
+                    val spendingProductNameDao = SpendingProductNameDao(requireContext())
+                    spendingProductNameDao.selectSpendingProductNameData(spendingDto,
                         onSuccess = { spendingList ->
                             spendingActivityList.clear()
                             spendingActivityList.addAll(spendingList)
@@ -198,8 +199,8 @@ class SearchFragment : Fragment() {
                     val spendingDto =
                         SpendingDto(searchKey, dateFromLocal, dateToLocal)
 
-                    val spendingDao = SpendingDao(requireContext())
-                    spendingDao.selectSpendingProductTypeData(spendingDto,
+                    val spendingProductTypeDao = SpendingProductTypeDao(requireContext())
+                    spendingProductTypeDao.selectSpendingProductTypeData(spendingDto,
                         onSuccess = { spendingList ->
                             spendingActivityList.clear()
                             spendingActivityList.addAll(spendingList)

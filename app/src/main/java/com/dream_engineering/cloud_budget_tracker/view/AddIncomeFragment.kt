@@ -12,7 +12,6 @@ import android.widget.EditText
 import android.widget.TextView
 import com.dream_engineering.cloud_budget_tracker.R
 import com.dream_engineering.cloud_budget_tracker.dao.IncomeDao
-import com.dream_engineering.cloud_budget_tracker.dao.SpendingDao
 import com.dream_engineering.cloud_budget_tracker.dto.IncomeDto
 import com.dream_engineering.cloud_budget_tracker.dto.SpendingDto
 import java.io.IOException
