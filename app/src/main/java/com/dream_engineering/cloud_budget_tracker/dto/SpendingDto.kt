@@ -28,6 +28,28 @@ class SpendingDto {
         this.dateTo = dateTo
     }
 
+    class SpendingDto(
+        var date: LocalDate? = null,
+        var dateFrom: LocalDate? = null,
+        var dateTo: LocalDate? = null,
+        var spendingCalcSum: Double = 0.0,
+        var storeName: String? = null,
+        var productName: String? = null,
+        var productType: String? = null
+    ) {
+        // Example of a secondary constructor
+        companion object {
+            fun createStoreSpending(storeName: String, dateFrom: LocalDate, dateTo: LocalDate): SpendingDto {
+                return SpendingDto(storeName = storeName, dateFrom = dateFrom, dateTo = dateTo)
+            }
+
+            fun createProductSpending(productName: String, dateFrom: LocalDate, dateTo: LocalDate): SpendingDto {
+                return SpendingDto(productName = productName, dateFrom = dateFrom, dateTo = dateTo)
+            }
+        }
+
+    }
+
     constructor(
         date: LocalDate,
         storeName: String,

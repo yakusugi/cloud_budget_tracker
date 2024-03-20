@@ -2,18 +2,12 @@ package com.dream_engineering.cloud_budget_tracker.dao
 
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
-import com.android.volley.AuthFailureError
 import com.android.volley.Request
 import com.android.volley.Response
-import com.android.volley.ServerError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.dream_engineering.cloud_budget_tracker.dto.SpendingDto
-import com.dream_engineering.cloud_budget_tracker.dto.UserDto
 import com.dream_engineering.cloud_budget_tracker.utils.SharedPreferencesManager
-import com.dream_engineering.cloud_budget_tracker.view.AddSpendingFragment
-import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
