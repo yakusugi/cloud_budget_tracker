@@ -16,8 +16,11 @@ import android.widget.Toast
 import com.dream_engineering.cloud_budget_tracker.R
 import com.dream_engineering.cloud_budget_tracker.adapter.SpendingSearchAdapter
 import com.dream_engineering.cloud_budget_tracker.dao.SpendingDateDao
+import com.dream_engineering.cloud_budget_tracker.dao.SpendingDateSumDao
+import com.dream_engineering.cloud_budget_tracker.dao.SpendingStoreNameSumDao
 import com.dream_engineering.cloud_budget_tracker.databinding.ActivityMainBinding
 import com.dream_engineering.cloud_budget_tracker.dto.SpendingDto
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -119,7 +122,6 @@ class DateSearchFragment : Fragment() {
 
         searchButton.setOnClickListener {
             val searchCurrency: String = currencyEditText.getText().toString()
-            Log.d("TAG22222", "onCreateView: " + searchCurrency)
             val dateFromLocal: LocalDate = LocalDate.parse(tvDatePickerFrom.text.toString())
             val dateToLocal: LocalDate = LocalDate.parse(tvDatePickerTo.text.toString())
 
@@ -138,6 +140,30 @@ class DateSearchFragment : Fragment() {
                         .show()
                     Log.d("SearchFragment", errorMessage)
                 })
+
+            // for calc sum result
+            try {
+                val spendingDto = SpendingDto(searchCurrency, dateFromLocal, dateToLocal, true)
+                val spendingDateSumDao = SpendingDateSumDao(requireContext())
+
+                // Call the selectSpendingStoreCalc method
+                spendingDateSumDao.selectSpendingStoreCalc(
+                    spendingDto,
+                    onSuccess = { spendingSum ->
+                        // Update the TextView on the UI thread
+                        activity?.runOnUiThread {
+                            val resultTextView = view?.findViewById<MaterialAutoCompleteTextView>(R.id.date_date_calc_result_tv)
+                            resultTextView?.setText(spendingSum.toString())
+                        }
+                    },
+                    onError = { errorMessage ->
+                        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+                        Log.d("SearchFragment", errorMessage)
+                    }
+                )
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
         }
 
         return rootView
