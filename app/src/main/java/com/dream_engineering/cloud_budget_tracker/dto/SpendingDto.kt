@@ -28,6 +28,17 @@ class SpendingDto {
         this.dateTo = dateTo
     }
 
+    constructor(currencyCode: String, dateFrom: LocalDate, dateTo: LocalDate, isCurrency: Boolean) {
+        if (isCurrency) {
+            this.currencyCode = currencyCode
+        } else {
+            this.storeName = currencyCode // Assuming you want to use the same string as either storeName or currencyCode based on the flag
+        }
+        this.dateFrom = dateFrom
+        this.dateTo = dateTo
+    }
+
+
     class SpendingDto(
         var date: LocalDate? = null,
         var dateFrom: LocalDate? = null,

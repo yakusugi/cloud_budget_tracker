@@ -34,7 +34,7 @@ class SpendingProductTypeDao(context: Context)  {
             // Create a map of parameters to send in the POST request
             val params = HashMap<String, String>()
             params["email"] = SharedPreferencesManager.getUserEmail(context).toString()
-            params["product_type"] = spendingDto.productType
+            params["product_type"] = spendingDto.storeName
             params["date_from"] = spendingDto.dateFrom.toString()
             params["date_to"] = spendingDto.dateTo.toString()
 

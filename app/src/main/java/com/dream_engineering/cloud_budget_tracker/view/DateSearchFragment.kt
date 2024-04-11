@@ -119,11 +119,12 @@ class DateSearchFragment : Fragment() {
 
         searchButton.setOnClickListener {
             val searchCurrency: String = currencyEditText.getText().toString()
+            Log.d("TAG22222", "onCreateView: " + searchCurrency)
             val dateFromLocal: LocalDate = LocalDate.parse(tvDatePickerFrom.text.toString())
             val dateToLocal: LocalDate = LocalDate.parse(tvDatePickerTo.text.toString())
 
             val spendingDto =
-                SpendingDto(searchCurrency, dateFromLocal, dateToLocal)
+                SpendingDto(searchCurrency, dateFromLocal, dateToLocal, true)
 
             val spendingDateDao = SpendingDateDao(requireContext())
             spendingDateDao.selectSpendingDateData(spendingDto,
