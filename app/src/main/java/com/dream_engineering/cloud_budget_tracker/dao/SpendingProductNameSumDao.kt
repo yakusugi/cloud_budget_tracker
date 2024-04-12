@@ -7,6 +7,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.dream_engineering.cloud_budget_tracker.dto.SpendingDto
+import com.dream_engineering.cloud_budget_tracker.dto.SpendingProductNameSumDto
 import com.dream_engineering.cloud_budget_tracker.utils.SharedPreferencesManager
 import org.json.JSONException
 import org.json.JSONObject
@@ -14,11 +15,11 @@ import java.io.IOException
 import java.time.LocalDate
 import java.util.Properties
 
-class SpendingStoreNameSumDao(context: Context) {
+class SpendingProductNameSumDao(context: Context) {
     private val context: Context = context.applicationContext
 
-    fun selectSpendingStoreCalc(
-        spendingDto: SpendingDto,
+    fun selectSpendingProductNameCalc(
+        spendingDto: SpendingProductNameSumDto,
         onSuccess: (Double) -> Unit,
         onError: (String) -> Unit
     ) {
@@ -27,13 +28,13 @@ class SpendingStoreNameSumDao(context: Context) {
             val inputStream = context.assets.open("server_config.properties")
             properties.load(inputStream)
             val serverUrl = properties.getProperty("server_url")
-            val phpSelectFile = properties.getProperty("spending_store_search_sum_php_file")
+            val phpSelectFile = properties.getProperty("spending_product_name_search_sum_php_file")
             val selectUrl = "$serverUrl$phpSelectFile"
             Log.d("select_url", selectUrl)
 
             val params = HashMap<String, String>()
             params["email"] = SharedPreferencesManager.getUserEmail(context).toString()
-            params["store_name"] = spendingDto.storeName
+            params["product_name"] = spendingDto.productName
             params["date_from"] = spendingDto.dateFrom.toString()
             params["date_to"] = spendingDto.dateTo.toString()
 

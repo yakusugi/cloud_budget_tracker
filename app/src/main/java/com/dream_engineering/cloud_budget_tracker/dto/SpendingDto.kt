@@ -38,6 +38,18 @@ class SpendingDto {
         this.dateTo = dateTo
     }
 
+    companion object {
+        // Factory method to create a SpendingDto based on product name and date range
+        fun createProductSpendingByName(productName: String, dateFrom: LocalDate, dateTo: LocalDate): SpendingDto {
+            return SpendingDto().apply {
+                this.productName = productName
+                this.dateFrom = dateFrom
+                this.dateTo = dateTo
+                // Initialize any other properties with defaults if necessary
+            }
+        }
+    }
+
 
     class SpendingDto(
         var date: LocalDate? = null,

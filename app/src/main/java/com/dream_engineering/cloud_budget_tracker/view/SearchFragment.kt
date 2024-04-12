@@ -17,11 +17,13 @@ import androidx.fragment.app.Fragment
 import com.dream_engineering.cloud_budget_tracker.R
 import com.dream_engineering.cloud_budget_tracker.adapter.SpendingSearchAdapter
 import com.dream_engineering.cloud_budget_tracker.dao.SpendingProductNameDao
+import com.dream_engineering.cloud_budget_tracker.dao.SpendingProductNameSumDao
 import com.dream_engineering.cloud_budget_tracker.dao.SpendingProductTypeDao
 import com.dream_engineering.cloud_budget_tracker.dao.SpendingStoreNameDao
 import com.dream_engineering.cloud_budget_tracker.dao.SpendingStoreNameSumDao
 import com.dream_engineering.cloud_budget_tracker.databinding.ActivityMainBinding
 import com.dream_engineering.cloud_budget_tracker.dto.SpendingDto
+import com.dream_engineering.cloud_budget_tracker.dto.SpendingProductNameSumDto
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -194,6 +196,32 @@ class SearchFragment : Fragment() {
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
+
+                //todo: add sum result calc here
+                try {
+//                    val spendingDto = SpendingDto(searchKey, dateFromLocal, dateToLocal)
+                    val spendingDto = SpendingProductNameSumDto(searchKey, dateFromLocal, dateToLocal)
+                    val spendingStoreNameSumDao = SpendingProductNameSumDao(requireContext())
+
+                    // Call the selectSpendingStoreCalc method
+                    spendingStoreNameSumDao.selectSpendingProductNameCalc(
+                        spendingDto,
+                        onSuccess = { spendingSum ->
+                            // Update the TextView on the UI thread
+                            activity?.runOnUiThread {
+                                val resultTextView = view?.findViewById<MaterialAutoCompleteTextView>(R.id.store_name_calc_result_tv)
+                                resultTextView?.setText(spendingSum.toString())
+                            }
+                        },
+                        onError = { errorMessage ->
+                            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+                            Log.d("SearchFragment", errorMessage)
+                        }
+                    )
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+
             } else if (radioGroup.getCheckedRadioButtonId() == R.id.search_product_type_radio) {
                 try {
                     val spendingDto =
