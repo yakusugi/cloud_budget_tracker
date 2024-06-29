@@ -25,6 +25,7 @@ class IncomeDao(context: Context)  {
     private val context: Context = context.applicationContext
     fun insertIntoIncome(incomeDto: IncomeDto): Int {
         try {
+            //test
             val properties = Properties()
             val inputStream = context.assets.open("server_config.properties")
             properties.load(inputStream)
